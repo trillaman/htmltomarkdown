@@ -77,10 +77,8 @@ for tag in bs.find_all():
         print("UL FOUND")
       elif tag.name == "ol":
         print("OL FOUND")
-        '''
         ordered_list_enabled = 1
         write_lists(readme_output, tag.contents[0], ordered_list_enabled)
-        '''
 print("Done")
 
 html_file.close()
