@@ -27,20 +27,19 @@ def write_without_encloses(filename, tag_name, tag_contents):
   filename.write(tag_name + tag_contents + "\n")
 
 #enabled (0/1) - unordered/ordered
-def write_lists(filename, tag_contents, enabled):
-  start_index = 1
+def write_lists(filename, index, enabled, tag_contents):
   if enabled == 0:
     filename.write("* " + tag_contents + "\n")
   if enabled == 1:
-    filename.write(str(start_index) + " " + tag_contents + "\n")
-    start_index += 1
+    filename.write(str(index) + ". " + tag_contents + "\n")
+    #start_index += 1
   
 
 html_without_enclosing = {"h1": "# ", "h2": "## ", "h3": "### ", "h4": "#### ","h5": "##### ", "h6": "###### ", 
                      "hr": "---",
                     }
 html_with_enclosing = {"i": "*", }
-html_lists = {"ul": 0, "ol": 1, "li": ""}
+html_lists = {"ul": 0, "ol": 1}
 
 
 '''
@@ -66,19 +65,29 @@ for tag in bs.find_all():
         write_with_encloses(readme_output, html_with_enclosing[tag.name], tag.contents[0])
     elif tag.name in html_lists:
       if tag.name == "ul":
-       
-        '''
-        ordered_list_enabled = 0
-        write_lists(readme_output, tag.contents[0], ordered_list_enabled)
-      
-        if tag.contents:
-          readme_output.write("* " + tag.contents[0])
-        '''
         print("UL FOUND")
+        #INDEX SET ONLY FOR NOT BREAKING THE CODE
+        index = 0
+        for li in bs.findAll('li'):
+          ordered_list_enabled = html_lists['ul']
+          if tag.contents:
+            #INDEX SET ONLY FOR NOT BREAKING THE CODE
+            index = 0
+            write_lists(readme_output, index, ordered_list_enabled, li.contents[0])
+          else:
+            pass
       elif tag.name == "ol":
         print("OL FOUND")
-        ordered_list_enabled = 1
-        write_lists(readme_output, tag.contents[0], ordered_list_enabled)
+        index = 1
+        for li in bs.findAll('li'):
+          ordered_list_enabled = html_lists['ol']
+          if tag.contents:
+            write_lists(readme_output, index, ordered_list_enabled, li.contents[0])
+            index += 1
+          else:
+            pass
+        
+
 print("Done")
 
 html_file.close()
