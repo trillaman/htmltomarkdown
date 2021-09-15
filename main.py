@@ -23,7 +23,7 @@ bs = BeautifulSoup(html_file, 'html.parser')
 html_without_enclosing = {"h1": "# ", "h2": "## ", "h3": "### ", "h4": "#### ","h5": "##### ", "h6": "###### ", 
                      "hr": "---",
                     }
-html_with_enclosing = {"i": "*", "b": "**", "s": "~~" }
+html_with_enclosing = {"i": "*", "b": "__", "s": "~~"}
 html_lists = {"ul": 0, "ol": 1}
 
 
@@ -35,10 +35,15 @@ def write_without_encloses(filename, tag_name, tag_contents):
 
 def write_unordered_list(filename, tag_contents):
   filename.write("* " + tag_contents + "\n")
-  
+
 def write_ordered_list(filename, index, tag_contents):
   filename.write(str(index) + ". " + tag_contents + "\n")
 
+#ITALIC UNDERSCORE **_content_**
+def write_italic_bold(filename, tag_name, tag_contents):
+  if tag_name == "*":
+    first_tag = "*" * 2
+  filename.write(str(first_tag) + "_" + str(tag_contents) + "_" + str(first_tag) + "\n")
 
 for tag in bs.find_all():
     #below conditional compare dicts and if html_without_enclosing is true than it knows to no to add enclosing signs like *something*
@@ -52,7 +57,10 @@ for tag in bs.find_all():
     elif tag.name in html_with_enclosing:
       if tag.contents:
         write_with_encloses(readme_output, html_with_enclosing[tag.name], tag.contents[0])
-
+      elif tag.name == "i" and tag.contents == None:
+        for bold in tag.findAll('b'):
+          if bold.contents:
+            write_italic_bold(readme_output, html_with_enclosing[bold.name], bold.contents[0])
     elif tag.name in html_lists:
       if tag.name == "ul":
         for li in tag.findAll('li'):

@@ -7,7 +7,7 @@
 ---
 *cursive*
 ~~striked~~
-**bolded**
+__bolded__
 ---
 1. first item
 2. second item
@@ -15,3 +15,4 @@
 * first item
 * second item
 * third item
+---
