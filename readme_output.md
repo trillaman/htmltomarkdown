@@ -23,3 +23,4 @@ lists
 **_LOL_**
 ***
 [index.html](INDEX)
+![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "test alt")

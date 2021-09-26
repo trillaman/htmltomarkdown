@@ -2,9 +2,11 @@
 #Horizontal Rule - done (changed)
 #Lists - done
 #Emphasis - done
+#Links - done
 
-#Links - to do
-#Images - to do
+#![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+#Images - done
+
 #Code and Syntax Highlighting - to do
 #Tables - to do
 #Blockquotes - to do
@@ -22,7 +24,7 @@ bsoup = BeautifulSoup(html_file, 'html.parser')
 output = bsoup.get_text()
 
 html_without_enclosing = {"h1": "# ", "h2": "## ", "h3": "### ", "h4": "#### ","h5": "##### ", "h6": "###### ", 
-                     "hr": "***", "p": ""
+                     "hr": "***", "p": "", "img": ""
                     }
 
 html_with_enclosing = {"i": "*", "b": "__", "s": "~~"}
@@ -55,12 +57,15 @@ def write_italic_bold(filename, tag_name, tag_contents):
   first_tag = "*" * 2
   filename.write(str(first_tag) + "_" + str(tag_contents) + "_" + str(first_tag) + "\n")
 
-bsoup.prettify()
+def write_image(filename, image_href, alt_text):
+  filename.write("![alt text]" + "(" + image_href + " \"" + alt_text + "\")")
 
+bsoup.prettify()
+print(list(bsoup.children))
 for tag in list(bsoup.children):
   #THIS VAR IS USED IN  CASE OF I AND B USED IN SAME TIME TO AVOID DUPLICATING
   bold_itallic_written = 0
-
+    #write_image(readme_output, image['src'], image['alt'])
   #below conditional compare dicts and if html_without_enclosing is true than it knows to no to add enclosing signs like *something*
   #THIS IS FOR NOTENCLOSED TAGS LIKE h1
   if tag.name in html_without_enclosing:
@@ -68,6 +73,8 @@ for tag in list(bsoup.children):
     if tag.contents:
       write_without_encloses(readme_output, html_without_enclosing[tag.name], tag.contents[0])        
     else:
+      if tag.name == "img":
+        write_image(readme_output, tag['src'], tag['alt'])
       write_without_encloses(readme_output, html_without_enclosing[tag.name], "")
 
   #BELOW IS FOR ENCLOSED TAGS LIKE "<b>content</b>" 
