@@ -1,8 +1,7 @@
 #Headers - done
-#Horizontal Rule - done
+#Horizontal Rule - done (changed)
 #Lists - done
-
-#Emphasis - to do
+#Emphasis - done
 
 #Links - to do
 #Images - to do
@@ -20,11 +19,10 @@ readme_output = open("readme_output.md", "w")
 
 bsoup = BeautifulSoup(html_file, 'html.parser')
 
-#TEST
 output = bsoup.get_text()
 
 html_without_enclosing = {"h1": "# ", "h2": "## ", "h3": "### ", "h4": "#### ","h5": "##### ", "h6": "###### ", 
-                     "hr": "---", "p": ""
+                     "hr": "***", "p": ""
                     }
 
 html_with_enclosing = {"i": "*", "b": "__", "s": "~~"}
@@ -57,15 +55,7 @@ def write_italic_bold(filename, tag_name, tag_contents):
   first_tag = "*" * 2
   filename.write(str(first_tag) + "_" + str(tag_contents) + "_" + str(first_tag) + "\n")
 
-#TEST
-#for row in output.splitlines():
-#print(bsoup.prettify())
-
-#print(list(bsoup.children))
-
 bsoup.prettify()
-
-#print(list(bsoup.children))
 
 for tag in list(bsoup.children):
   #THIS VAR IS USED IN  CASE OF I AND B USED IN SAME TIME TO AVOID DUPLICATING
@@ -80,33 +70,19 @@ for tag in list(bsoup.children):
     else:
       write_without_encloses(readme_output, html_without_enclosing[tag.name], "")
 
-  #BELOW IS FOR ENCLOSED TAGS 
+  #BELOW IS FOR ENCLOSED TAGS LIKE "<b>content</b>" 
   if tag.name in html_with_enclosing:
-    #THIS ONE SEARCH FOR CURSIVE AND BOLD EMPHASIS
-    #print(list(tag.children))
-    if tag.contents and len(list(tag.children)) == 0:
-      write_with_encloses(readme_output, str(html_with_enclosing[tag.name]), str(tag.contents[0]))
-
-    '''
-    if tag.name == "i" and len(list(tag.children)) > 0:
-      for ch in list(tag.children):
-        write_italic_bold(readme_output, html_with_enclosing[tag.name], tag.children[0].contents[0])
-    '''    
-    #if tag.name == "i" and len(tag.contents) != 0 and "b" in list(tag.children)[0]:
-    '''if tag.children[0].contents:
-        write_italic_bold(readme_output, html_with_enclosing[bold.name], tag.children[0].contents[0])
-        bold_itallic_written = 1  #assigning var to 1 to compare it and avoid duplicate <b> converting
-    '''
-    ''' elif tag.name == "i" and tag.contents == None:
-        for bold in tag.findAll('b'):
-          if bold.contents:
-            write_italic_bold(readme_output, html_with_enclosing[bold.name], bold.contents[0])
-    '''
-    #here is this comparing and break is for going out from this loop and going to next line in index
-    #if bold_itallic_written == 1:
-    #  break
-    #else:
-    #  write_with_encloses(readme_output, html_with_enclosing[tag.name], tag.contents[0])
+    if tag.contents:
+      #print(tag.contents)
+      for ch in tag.contents:
+        #below for <i><b>content</b></i> so italic content can be also bolded
+        if "<b>" in str(ch):
+          content = str(tag.contents[0])
+          content = content.replace("<b>", "")
+          content = content.replace("</b>", "")
+          write_italic_bold(readme_output, html_with_enclosing[tag.name], content)
+        else:
+          write_with_encloses(readme_output, str(html_with_enclosing[tag.name]), str(tag.contents[0]))
 
   #THIS ONE SEARCH FOR LISTS
   if tag.name in html_lists:

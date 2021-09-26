@@ -5,9 +5,12 @@ headers
 ### header 3
 ## header 2
 # header 1
----
+***
 emphasis
----
+*cursive*
+~~striked~~
+__bolded__
+***
 lists
 1. first item
 2. second item
@@ -16,6 +19,7 @@ lists
 * first item
 * second item
 * third item
----
----
+***
+**_LOL_**
+***
 [index.html](INDEX)
