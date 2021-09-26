@@ -14,7 +14,7 @@
 #YouTube Videos - to do
 
 from bs4 import BeautifulSoup
-
+import time
 html_file = open("index.html", "r")
 readme_output = open("readme_output.md", "w")
 
@@ -84,19 +84,24 @@ for tag in list(bsoup.children):
   if tag.name in html_with_enclosing:
     #THIS ONE SEARCH FOR CURSIVE AND BOLD EMPHASIS
     #print(list(tag.children))
-    if tag.contents:
+    if tag.contents and len(list(tag.children)) == 0:
       write_with_encloses(readme_output, str(html_with_enclosing[tag.name]), str(tag.contents[0]))
 
-      if tag.name == "i" and len(list(tag.children)) > 0:
-        for ch in list(tag.children):
-          write_with_encloses(readme_output, str(html_with_enclosing[tag.name]), str(tag.contents[0]))
-        
+    '''
+    if tag.name == "i" and len(list(tag.children)) > 0:
+      for ch in list(tag.children):
+        write_italic_bold(readme_output, html_with_enclosing[tag.name], tag.children[0].contents[0])
+    '''    
     #if tag.name == "i" and len(tag.contents) != 0 and "b" in list(tag.children)[0]:
     '''if tag.children[0].contents:
         write_italic_bold(readme_output, html_with_enclosing[bold.name], tag.children[0].contents[0])
         bold_itallic_written = 1  #assigning var to 1 to compare it and avoid duplicate <b> converting
     '''
-      
+    ''' elif tag.name == "i" and tag.contents == None:
+        for bold in tag.findAll('b'):
+          if bold.contents:
+            write_italic_bold(readme_output, html_with_enclosing[bold.name], bold.contents[0])
+    '''
     #here is this comparing and break is for going out from this loop and going to next line in index
     #if bold_itallic_written == 1:
     #  break
@@ -119,13 +124,7 @@ for tag in list(bsoup.children):
 
   if tag.name in html_hrefs:
     write_links(readme_output, str(tag.get('href')), tag.contents[0])
-      
-  #for tag in bsoup.find_all(href=True):
-    #THIS ONE IS FOR HREFS
-    #if tag.name in html_hrefs:
-      
-      #print(tag.name + ":" +tag.contents[0])
-      #print("\n" + str(tag.get('href')))
+    
 print("\n\nDone")
 
 html_file.close()

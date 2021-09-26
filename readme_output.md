@@ -7,10 +7,6 @@ headers
 # header 1
 ---
 emphasis
-*cursive*
-*cursive*
-~~striked~~
-__bolded__
 ---
 lists
 1. first item
@@ -21,7 +17,5 @@ lists
 * second item
 * third item
 ---
-*<b>LOL</b>*
-*<b>LOL</b>*
 ---
 [index.html](INDEX)
