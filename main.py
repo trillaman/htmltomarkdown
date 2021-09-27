@@ -22,7 +22,7 @@ from bs4 import BeautifulSoup
 import time
 
 html_without_enclosing = {"h1": "# ", "h2": "## ", "h3": "### ", "h4": "#### ","h5": "##### ", "h6": "###### ", 
-                     "hr": "***", "p": "", "img": ""
+                     "hr": "***", "p": "", "img": "", "br": ""
                     }
 
 html_with_enclosing = {"i": "*", "b": "__", "s": "~~"}
@@ -58,6 +58,8 @@ def write_italic_bold(output_file, tag_content):
 def write_image(output_file, image_href, alt_text):
   output_file.write("![alt text]" + "(" + image_href + " \"" + alt_text + "\")")
 
+def write_new_line(output_file):
+  output_file.write("")
 
 
 def main():
@@ -76,6 +78,8 @@ def main():
       else: #for empty content - so without text between > and <
         if tag.name == "img": #check for images
           write_image(readme_output, tag['src'], tag['alt'])
+        if tag.name == "br":
+          write_new_line(readme_output)
         write_without_encloses(readme_output, html_without_enclosing[tag.name], "")     #if tag is not image then write normal tag
 
     #BELOW IS FOR ENCLOSED TAGS LIKE "<b>content</b>"

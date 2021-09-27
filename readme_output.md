@@ -15,7 +15,9 @@ lists
 1. first item
 2. second item
 3. third item
+
 [INDEX](index.html)
+
 * first item
 * second item
 * third item
@@ -23,4 +25,5 @@ lists
 **_LOL_**
 ***
 [INDEX](index.html)
+
 ![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "test alt")
