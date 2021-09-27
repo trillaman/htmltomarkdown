@@ -32,28 +32,28 @@ html_lists = {"ul": 0, "ol": 1}
 html_hrefs = {"a": ""}
 
 
-def write_with_encloses(output_file, tag_name, tag_contents):
-  output_file.write(tag_name + tag_contents + tag_name + "\n")
+def write_with_encloses(output_file, tag_name, tag_content):
+  output_file.write(tag_name + tag_content + tag_name + "\n")
 
-def write_without_encloses(output_file, tag_name, tag_contents):
-  output_file.write(tag_name + tag_contents + "\n")
+def write_without_encloses(output_file, tag_name, tag_content):
+  output_file.write(tag_name + tag_content + "\n")
 
-def write_unordered_list(output_file, tag_contents):
-  output_file.write("* " + tag_contents + "\n")
+def write_unordered_list(output_file, tag_content):
+  output_file.write("* " + tag_content + "\n")
 
-def write_ordered_list(output_file, index, tag_contents):
-  output_file.write(str(index) + ". " + tag_contents + "\n")
+def write_ordered_list(output_file, index, tag_content):
+  output_file.write(str(index) + ". " + tag_content + "\n")
 
 def write_empty_tags(output_file, tag):
   output_file.write(tag)
 
-def write_links(output_file, tag1_contents, tag2_contents):
-  output_file.write("[" + tag1_contents + "]" + "(" + tag2_contents + ")" + "\n")
+def write_links(output_file, tag_text, tag_href):
+  output_file.write("[" + tag_text + "]" + "(" + tag_href + ")" + "\n")
 
 #ITALIC UNDERSCORE **_content_**
-def write_italic_bold(output_file, tag_name, tag_contents):
-  first_tag = "*" * 2
-  output_file.write(str(first_tag) + "_" + str(tag_contents) + "_" + str(first_tag) + "\n")
+def write_italic_bold(output_file, tag_content):
+  italic = "*" * 2
+  output_file.write(str(italic) + "_" + str(tag_content) + "_" + str(italic) + "\n")
 
 def write_image(output_file, image_href, alt_text):
   output_file.write("![alt text]" + "(" + image_href + " \"" + alt_text + "\")")
@@ -86,7 +86,7 @@ def main():
             content = str(tag.contents[0])
             content = content.replace("<b>", "")      #remove opening bold tag to get pure tag content
             content = content.replace("</b>", "")     #remove closing bold tag to get pure tag content
-            write_italic_bold(readme_output, html_with_enclosing[tag.name], content)      #separated function for bolded italic
+            write_italic_bold(readme_output, content)      #separated function for bolded italic
           else:     #if not child but got contents - type enclosed tag in file
             write_with_encloses(readme_output, str(html_with_enclosing[tag.name]), str(tag.contents[0]))
 
@@ -106,7 +106,7 @@ def main():
 
     #THIS ONE FOR HYPERLINKS
     if tag.name in html_hrefs:
-      write_links(readme_output, str(tag.get('href')), tag.contents[0])
+      write_links(readme_output, tag.contents[0], str(tag.get('href')))
     
   html_file.close()   #close input file after use
   readme_output.close()     #close output file after use

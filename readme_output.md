@@ -15,12 +15,12 @@ lists
 1. first item
 2. second item
 3. third item
-[index.html](INDEX)
+[INDEX](index.html)
 * first item
 * second item
 * third item
 ***
 **_LOL_**
 ***
-[index.html](INDEX)
+[INDEX](index.html)
 ![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "test alt")
