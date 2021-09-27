@@ -32,31 +32,31 @@ html_lists = {"ul": 0, "ol": 1}
 html_hrefs = {"a": ""}
 
 
-def write_with_encloses(filename, tag_name, tag_contents):
-  filename.write(tag_name + tag_contents + tag_name + "\n")
+def write_with_encloses(output_file, tag_name, tag_contents):
+  output_file.write(tag_name + tag_contents + tag_name + "\n")
 
-def write_without_encloses(filename, tag_name, tag_contents):
-  filename.write(tag_name + tag_contents + "\n")
+def write_without_encloses(output_file, tag_name, tag_contents):
+  output_file.write(tag_name + tag_contents + "\n")
 
-def write_unordered_list(filename, tag_contents):
-  filename.write("* " + tag_contents + "\n")
+def write_unordered_list(output_file, tag_contents):
+  output_file.write("* " + tag_contents + "\n")
 
-def write_ordered_list(filename, index, tag_contents):
-  filename.write(str(index) + ". " + tag_contents + "\n")
+def write_ordered_list(output_file, index, tag_contents):
+  output_file.write(str(index) + ". " + tag_contents + "\n")
 
-def write_empty_tags(filename, tag):
-  filename.write(tag)
+def write_empty_tags(output_file, tag):
+  output_file.write(tag)
 
-def write_links(filename, tag1_contents, tag2_contents):
-  filename.write("[" + tag1_contents + "]" + "("+ tag2_contents +")" + "\n")
+def write_links(output_file, tag1_contents, tag2_contents):
+  output_file.write("[" + tag1_contents + "]" + "(" + tag2_contents + ")" + "\n")
 
 #ITALIC UNDERSCORE **_content_**
-def write_italic_bold(filename, tag_name, tag_contents):
+def write_italic_bold(output_file, tag_name, tag_contents):
   first_tag = "*" * 2
-  filename.write(str(first_tag) + "_" + str(tag_contents) + "_" + str(first_tag) + "\n")
+  output_file.write(str(first_tag) + "_" + str(tag_contents) + "_" + str(first_tag) + "\n")
 
-def write_image(filename, image_href, alt_text):
-  filename.write("![alt text]" + "(" + image_href + " \"" + alt_text + "\")")
+def write_image(output_file, image_href, alt_text):
+  output_file.write("![alt text]" + "(" + image_href + " \"" + alt_text + "\")")
 
 
 
