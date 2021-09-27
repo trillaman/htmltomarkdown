@@ -17,20 +17,21 @@
 #TODO PYTHON SIDE:
       # exceptions handling
       # refactoring for cleaner code
+      # unit tests
 
 from bs4 import BeautifulSoup
-import time
+from converter import *
 
-html_without_enclosing = {"h1": "# ", "h2": "## ", "h3": "### ", "h4": "#### ","h5": "##### ", "h6": "###### ", 
-                     "hr": "***", "p": "", "img": "", "br": ""
-                    }
 
-html_with_enclosing = {"i": "*", "b": "__", "s": "~~"}
 
-html_lists = {"ul": 0, "ol": 1}
 
-html_hrefs = {"a": ""}
+html_without_enclosing = { "hr": "***", "p": "", "img": "", "br": "" }
 
+html_with_enclosing = { "i": "*", "b": "__", "s": "~~" }
+
+html_lists = { "ul": 0, "ol": 1 }
+
+html_hrefs = { "a": "" }
 
 def write_with_encloses(output_file, tag_name, tag_content):
   output_file.write(tag_name + tag_content + tag_name + "\n")
@@ -59,7 +60,7 @@ def write_image(output_file, image_href, alt_text):
   output_file.write("![alt text]" + "(" + image_href + " \"" + alt_text + "\")")
 
 def write_new_line(output_file):
-  output_file.write("")
+  output_file.write("\n")
 
 
 def main():
@@ -67,19 +68,30 @@ def main():
   readme_output = open("readme_output.md", "w")     #output - readme_output.md
 
   bsoup = BeautifulSoup(html_file, 'html.parser')     #parse input
+  conv = Converter()
 
   #could be prettier - bsoup.prettify()
   #print(list(bsoup.children))
 
-  for tag in list(bsoup.children):      #THIS NEED TO BE REFACTORED
+  for tag in list(bsoup.children):
+        try:
+          check_if_exists = conv.check_if_tag_exists_in_list(tag.name)
+          if check_if_exists != -1:     # -1 means it doesn't exists in any list
+            if tag.contents:
+              out = conv.convert(check_if_exists, tag.name, tag.contents[0])
+              readme_output.write(out)
+            else:
+              out = conv.convert(check_if_exists, tag.name, "")
+              readme_output.write(out)
+        except Exception as ex:
+          print(ex)
+  '''
     if tag.name in html_without_enclosing:
       if tag.contents:
         write_without_encloses(readme_output, html_without_enclosing[tag.name], tag.contents[0])
       else: #for empty content - so without text between > and <
         if tag.name == "img": #check for images
           write_image(readme_output, tag['src'], tag['alt'])
-        if tag.name == "br":
-          write_new_line(readme_output)
         write_without_encloses(readme_output, html_without_enclosing[tag.name], "")     #if tag is not image then write normal tag
 
     #BELOW IS FOR ENCLOSED TAGS LIKE "<b>content</b>"
@@ -111,7 +123,7 @@ def main():
     #THIS ONE FOR HYPERLINKS
     if tag.name in html_hrefs:
       write_links(readme_output, tag.contents[0], str(tag.get('href')))
-    
+  '''
   html_file.close()   #close input file after use
   readme_output.close()     #close output file after use
 
