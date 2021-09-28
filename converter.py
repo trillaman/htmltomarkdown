@@ -1,4 +1,4 @@
-html_headers = { "h1": "# ", "h2": "## ", "h3": "### ", "h4": "#### ","h5": "##### ", "h6": "###### ", "hr": "***"}
+html_headers = { "h1": "# ", "h2": "## ", "h3": "### ", "h4": "#### ","h5": "##### ", "h6": "###### ", "hr": "***", "p": "", "br": ""}
 html_without_enclosing = { "hr": "***", "p": "", "img": "", "br": "" }
 
 class Converter():
@@ -7,7 +7,6 @@ class Converter():
             return 1
         else:
             return -1
-
 
     def convert(self, key_list, tag_name, tag_content):
         converted = ""
