@@ -77,12 +77,16 @@ def main():
         try:
           check_if_exists = conv.check_if_tag_exists_in_list(tag.name)
           if check_if_exists != -1:     # -1 means it doesn't exists in any list
+            #print("Exists")
+            list_with_tag = conv.get_list_with_tag(tag.name) #returns list containing tag
             if tag.contents:
-              out = conv.convert(check_if_exists, tag.name, tag.contents[0])
+              out = conv.convert(list_with_tag, tag.name, tag.contents[0])
               readme_output.write(out)
             else:
-              out = conv.convert(check_if_exists, tag.name, "")
+              out = conv.convert(list_with_tag, tag.name, "")
               readme_output.write(out)
+          else:
+            print("not exists")
         except Exception as ex:
           print(ex)
   '''
