@@ -1,13 +1,13 @@
-html_headers = { "h1": "# ", "h2": "## ", "h3": "### ", "h4": "#### ","h5": "##### ", "h6": "###### " }
-html_empty = { "hr": "***", "br": "" }
-html_without_closing_tag = { "p": "", "img": "", }
-html_with_closing_tag = { "i": "*", "b": "__", "s": "~~" }
-html_lists = { "ul": 0, "ol": 1 }
-html_links = { "a": "" } # THIS IS SEPARATED BECAUSE NEEDS DIFFERENT BEHAVIOUR
+html_headers = {"h1": "# ", "h2": "## ", "h3": "### ", "h4": "#### ", "h5": "##### ", "h6": "###### "} # write_without_encloses
+html_empty = {"hr": "***", "br": ""} # write_empty_tags
+html_without_closing_tag = {"img": "" }
+html_with_closing_tag = {"p": "", "i": "*", "b": "__", "s": "~~"}
+html_lists = {"ul": 0, "ol": 1}
+html_links = {"a": ""}  # THIS IS SEPARATED BECAUSE NEEDS DIFFERENT BEHAVIOUR
+
 
 class Converter():
-
-    #METHODS FOR PROPER FORMATTING OUTPUT STRINGS
+    # METHODS FOR PROPER FORMATTING OUTPUT STRINGS
 
     def write_with_encloses(self, tag_name, tag_content):
         return str(tag_name + tag_content + tag_name + "\n")
@@ -22,12 +22,12 @@ class Converter():
         return str(str(index) + ". " + tag_content + "\n")
 
     def write_empty_tags(self, tag):
-        return str(tag)
+        return str(tag + "\n")
 
     def write_links(self, tag_text, tag_href):
         return str("[" + tag_text + "]" + "(" + tag_href + ")" + "\n")
 
-    def write_italic_bold(self, tag_content):     # ITALIC UNDERSCORE **_content_**
+    def write_italic_bold(self, tag_content):  # ITALIC UNDERSCORE **_content_**
         italic = "*" * 2
         return str(str(italic) + "_" + str(tag_content) + "_" + str(italic) + "\n")
 
@@ -37,22 +37,34 @@ class Converter():
     def write_new_line(self):
         return str("\n")
 
-    #END OF STRING FORMATHING METHODS
-
+    # END OF STRING FORMATHING METHODS
 
     def check_if_tag_exists_in_list(self, tag_name):
-        if tag_name in html_headers or tag_name in html_empty or tag_name in html_without_closing_tag:
+        if tag_name in html_headers or tag_name in html_empty or tag_name in html_without_closing_tag or tag_name in html_with_closing_tag:
             return 1
         else:
             return -1
 
-    def get_list_with_tag(self, tag_name):
-        if tag_name in html_headers:
+    def get_list_with_tag(self, tag):
+        if tag in html_headers:
             list = html_headers
-        elif tag_name in html_empty:
+        elif tag in html_empty:
             list = html_empty
-        elif tag_name in html_without_closing_tag:
+        elif tag in html_without_closing_tag:
             list = html_without_closing_tag
+        elif tag in html_with_closing_tag:
+            list = html_with_closing_tag
+        return list
+
+    def get_list_name_with_tag(self, tag_name):
+        if tag_name in html_headers:
+            list = "html_headers"
+        elif tag_name in html_empty:
+            list = "html_empty"
+        elif tag_name in html_without_closing_tag:
+            list = "html_without_closing_tag"
+        elif tag_name in html_with_closing_tag:
+            list = "html_with_closing_tag"
         return list
 
     '''
@@ -68,14 +80,15 @@ class Converter():
                     self.write_with_encloses(readme_output, str(html_with_enclosing[tag.name]), str(tag.contents[0])) #README OUTPUT TO MODIFY BY MODYFING WRITE_WITH_ENCLOSES METHOD
 
     '''
+
     def write_html_empty(self, tag, content):
         if len(content) > 0:
             out = self.write_without_encloses(html_empty[tag.name], content) #README OUTPUT TO MODIFY BY MODYFING WRITE_WITHOUT_ENCLOSES METHOD
         else:  # for empty content - so without text between > and <
             if tag == "img":  # check for images
                 out = self.write_image(tag['src'], tag['alt'])
-            out = self.write_without_encloses(html_empty[tag.name], "")  # if tag is not image then write normal tag  - README OUTPUT TO MODIFY BY MODYFING WRITE_WITHOUT_ENCLOSES METHOD
-        return str(out)
+            out = self.write_without_encloses(html_empty[tag], "")  # if tag is not image then write normal tag  - README OUTPUT TO MODIFY BY MODYFING WRITE_WITHOUT_ENCLOSES METHOD
+        return out
 
     '''
     def write_html_lists(self, tag):
@@ -96,16 +109,23 @@ class Converter():
         return str( self.write_links(readme_output, tag.contents[0], str(tag.get('href'))) ) #README OUTPUT TO MODIFY BY MODYFING WRITE_LINKS METHOD
 
     '''
+
     def convert(self, key_list, tag_name, **kwargs):
         converted = ""
-        tag_content = kwargs.get('tag_content')      # REMEMBER THAT TAG_CONTENT IS tag.contents NOT tag.contents[0]
-        if len(tag_content) > 0:
-            if key_list == html_empty:  # FOR HR AND BR
-                converted = self.write_html_empty(key_list[tag_name], tag_content[0])
-            if key_list == html_without_closing_tag:     # FOR P AND IMG
-                converted = self.write_without_encloses(key_list[tag_name], tag_content[0])
-            #converted = str(key_list[tag_name] + tag_content + "\n")
-        else:
-            converted = str(key_list[tag.name] + "\n")
-        return converted
+        tag_content = kwargs.get('tag_content') # REMEMBER THAT TAG_CONTENT IS tag.contents NOT tag.contents[0]
 
+        print(key_list)
+
+        if key_list == html_empty:  # FOR HR AND BR
+            converted = self.write_empty_tags(html_empty[tag_name])
+
+        # if key_list == html_without_closing_tag:  # FOR IMG
+        #    converted = self.self.write_image(tag_name['src'], tag_name['alt']) # BAD - SHOULD BE ONLY TAG , NOT TAG_NAME
+
+        if key_list == html_headers:
+            converted = self.write_without_encloses(html_headers[tag_name], tag_content[0])
+        #    converted = str(key_list[tag_name] + "\n")
+
+        if key_list == html_with_closing_tag:
+            converted = self.write_with_encloses(html_with_closing_tag[tag_name], tag_content[0])
+        return converted
