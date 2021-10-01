@@ -9,30 +9,30 @@ html_links = {"a": ""}  # THIS IS SEPARATED BECAUSE NEEDS DIFFERENT BEHAVIOUR
 class Converter():
     # METHODS FOR PROPER FORMATTING OUTPUT STRINGS
 
-    def write_with_encloses(self, tag_name, tag_content):
-        return str(tag_name + tag_content + tag_name + "\n")
+    def write_with_encloses(self, tag_name, tag_content): # FOR HTML_WITH_CLOSING_TAG
+        return str(tag_name) + str(tag_content) + str(tag_name) + "\n"
 
-    def write_without_encloses(self, tag_name, tag_content):
-        return str(tag_name + tag_content + "\n")
+    def write_without_encloses(self, tag_name, tag_content): # FOR HTML_HEADERS
+        return str(tag_name) + str(tag_content) + "\n"
 
     def write_unordered_list(self, tag_content):
-        return str("* " + tag_content + "\n")
+        return "* " + str(tag_content) + "\n"
 
     def write_ordered_list(self, index, tag_content):
-        return str(str(index) + ". " + tag_content + "\n")
+        return str(index) + ". " + str(tag_content) + "\n"
 
-    def write_empty_tags(self, tag):
-        return str(tag + "\n")
+    def write_empty_tags(self, tag): # FOR HTML_EMPTY
+        return str(tag) + "\n"
 
     def write_links(self, tag_text, tag_href):
-        return str("[" + tag_text + "]" + "(" + tag_href + ")" + "\n")
+        return "[" + str(tag_text) + "]" + "(" + str(tag_href) + ")" + "\n"
 
     def write_italic_bold(self, tag_content):  # ITALIC UNDERSCORE **_content_**
         italic = "*" * 2
-        return str(str(italic) + "_" + str(tag_content) + "_" + str(italic) + "\n")
+        return str(italic) + "_" + str(tag_content) + "_" + str(italic) + "\n"
 
     def write_image(self, image_href, alt_text):
-        return str("![alt text]" + "(" + image_href + " \"" + alt_text + "\")")
+        return "![alt text]" + "(" + str(image_href) + " \"" + alt_text + "\")"
 
     def write_new_line(self):
         return str("\n")
@@ -45,7 +45,7 @@ class Converter():
         else:
             return -1
 
-    def get_list_with_tag(self, tag):
+    def get_list_with_tag(self, tag, name):
         if tag in html_headers:
             list = html_headers
         elif tag in html_empty:
@@ -54,17 +54,8 @@ class Converter():
             list = html_without_closing_tag
         elif tag in html_with_closing_tag:
             list = html_with_closing_tag
-        return list
-
-    def get_list_name_with_tag(self, tag_name):
-        if tag_name in html_headers:
-            list = "html_headers"
-        elif tag_name in html_empty:
-            list = "html_empty"
-        elif tag_name in html_without_closing_tag:
-            list = "html_without_closing_tag"
-        elif tag_name in html_with_closing_tag:
-            list = "html_with_closing_tag"
+        if name == 1:
+            list = str(list)
         return list
 
     '''
@@ -113,14 +104,14 @@ class Converter():
     def convert(self, key_list, tag_name, **kwargs):
         converted = ""
         tag_content = kwargs.get('tag_content') # REMEMBER THAT TAG_CONTENT IS tag.contents NOT tag.contents[0]
-
-        print(key_list)
-
+        # print(key_list)
+        tag_img = kwargs.get('tag_img')
         if key_list == html_empty:  # FOR HR AND BR
             converted = self.write_empty_tags(html_empty[tag_name])
 
-        # if key_list == html_without_closing_tag:  # FOR IMG
-        #    converted = self.self.write_image(tag_name['src'], tag_name['alt']) # BAD - SHOULD BE ONLY TAG , NOT TAG_NAME
+        if key_list == html_without_closing_tag:  # FOR IMG
+            if tag_img:
+                converted = self.write_image(tag_img['src'], tag_img['alt']) # BAD - SHOULD BE ONLY TAG , NOT TAG_NAME
 
         if key_list == html_headers:
             converted = self.write_without_encloses(html_headers[tag_name], tag_content[0])

@@ -45,17 +45,19 @@ def main():
     for tag in list(bsoup.children):
         check_if_exists = conv.check_if_tag_exists_in_list(tag.name)
         if check_if_exists != -1:  # -1 means it doesn't exists in any list
-            list_with_tag = conv.get_list_with_tag(tag.name)  # returns list containing tag
-            list_name_with_tag = conv.get_list_name_with_tag(tag.name)
+            list_with_tag = conv.get_list_with_tag(tag.name, 0)  # returns list containing tag
+            list_name_with_tag = conv.get_list_with_tag(tag.name, 1)
             print("Exists in %s\n" % list_name_with_tag)
             print("List: %s\n" % list_with_tag)
-            converted_value = str(conv.convert(list_with_tag, tag.name, tag_content=tag.contents))
+            if tag.name == "img":
+                converted_value = str(conv.convert(list_with_tag, tag.name, tag_content=tag.contents, tag_img=tag))
+            else:
+                converted_value = str(conv.convert(list_with_tag, tag.name, tag_content=tag.contents))
             readme_output.write(converted_value)
         else:
             print("Not exists in any list\n")
             converted_value = ""
             pass
-
 
     html_file.close()  # close input file after use
     readme_output.close()  # close output file after use
