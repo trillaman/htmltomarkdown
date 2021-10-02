@@ -46,7 +46,7 @@ def main():
         check_if_exists = conv.check_if_tag_exists_in_list(tag.name)
         if check_if_exists != -1:  # -1 means it doesn't exists in any list
             list_with_tag = conv.get_list_with_tag(tag.name, 0)  # returns list containing tag
-            list_name_with_tag = conv.get_list_with_tag(tag.name, 1)
+            list_name_with_tag = conv.get_list_with_tag(tag.name, True)
             print("Exists in %s\n" % list_name_with_tag)
             print("List: %s\n" % list_with_tag)
             if tag.name == "img":

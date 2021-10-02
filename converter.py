@@ -45,7 +45,7 @@ class Converter():
         else:
             return -1
 
-    def get_list_with_tag(self, tag, name):
+    def get_list_with_tag(self, tag, get_list_name):
         if tag in html_headers:
             list = html_headers
         elif tag in html_empty:
@@ -54,23 +54,20 @@ class Converter():
             list = html_without_closing_tag
         elif tag in html_with_closing_tag:
             list = html_with_closing_tag
-        if name == 1:
+        if get_list_name == True:
             list = str(list)
         return list
 
-    '''
-    def write_html_with_closing_tag(self, tag_name, tag_content): #THIS IS FOR ENCLOSED TAGS LIKE "<b>content</b>"
-        if tag_content:
-            for ch in tag.contents:  # ch for child
-                if "<b>" in str(ch):  # for <i><b>content</b></i> so italic content can be also bolded
-                    content = str(tag.contents[0])
-                    content = content.replace("<b>", "")  # remove opening bold tag to get pure tag content
-                    content = content.replace("</b>", "")  # remove closing bold tag to get pure tag content
-                    self.write_italic_bold(readme_output, content)  # separated function for bolded italic - README OUTPUT TO MODIFY BY MODYFING WRITE_ITALIC_BOLD METHOD
-                else:  # if not child but got contents - type enclosed tag in file
-                    self.write_with_encloses(readme_output, str(html_with_enclosing[tag.name]), str(tag.contents[0])) #README OUTPUT TO MODIFY BY MODYFING WRITE_WITH_ENCLOSES METHOD
-
-    '''
+    def write_html_with_closing_tag(self, tag, content): #THIS IS FOR ENCLOSED TAGS LIKE "<b>content</b>"
+        if len(content) > 0:
+            if "<b>" in str(content):  # for <i><b>content</b></i> so italic content can be also bolded
+                content1 = str(content)
+                content1 = content1.replace("<b>", "")  # remove opening bold tag to get pure tag content
+                content1 = content1.replace("</b>", "")  # remove closing bold tag to get pure tag content
+                out = self.write_italic_bold(content1)  # separated function for bolded italic - README OUTPUT TO MODIFY BY MODYFING WRITE_ITALIC_BOLD METHOD
+            else:  # if not child but got contents - type enclosed tag in file
+                out = self.write_with_encloses(tag, content) #README OUTPUT TO MODIFY BY MODYFING WRITE_WITH_ENCLOSES METHOD
+        return out
 
     def write_html_empty(self, tag, content):
         if len(content) > 0:
@@ -118,5 +115,6 @@ class Converter():
         #    converted = str(key_list[tag_name] + "\n")
 
         if key_list == html_with_closing_tag:
-            converted = self.write_with_encloses(html_with_closing_tag[tag_name], tag_content[0])
+            # converted = self.write_with_encloses(html_with_closing_tag[tag_name], tag_content[0])
+            converted = self.write_html_with_closing_tag(html_with_closing_tag[tag_name], tag_content[0])
         return converted
