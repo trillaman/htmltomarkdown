@@ -13,10 +13,12 @@ __bolded__
 ***
 lists
 
+[INDEX](index.html)
 
 ***
 **_LOL_**
 ***
 
+[INDEX](index.html)
 
 ![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "test alt")

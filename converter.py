@@ -25,7 +25,7 @@ class Converter():
         return str(tag) + "\n"
 
     def write_links(self, tag_text, tag_href):
-        return "[" + str(tag_text) + "]" + "(" + str(tag_href) + ")" + "\n"
+        return "[" + str(tag_href) + "]" + "(" + str(tag_text) + ")" + "\n"
 
     def write_italic_bold(self, tag_content):  # ITALIC UNDERSCORE **_content_**
         italic = "*" * 2
@@ -40,7 +40,7 @@ class Converter():
     # END OF STRING FORMATHING METHODS
 
     def check_if_tag_exists_in_list(self, tag_name):
-        if tag_name in html_headers or tag_name in html_empty or tag_name in html_without_closing_tag or tag_name in html_with_closing_tag:
+        if tag_name in html_headers or tag_name in html_empty or tag_name in html_without_closing_tag or tag_name in html_with_closing_tag or tag_name in html_links:
             return 1
         else:
             return -1
@@ -54,6 +54,8 @@ class Converter():
             list = html_without_closing_tag
         elif tag in html_with_closing_tag:
             list = html_with_closing_tag
+        elif tag in html_links:
+            list = html_links
         if get_list_name == True:
             list = str(list)
         return list
@@ -77,31 +79,30 @@ class Converter():
                 out = self.write_image(tag['src'], tag['alt'])
             out = self.write_without_encloses(html_empty[tag], "")  # if tag is not image then write normal tag  - README OUTPUT TO MODIFY BY MODYFING WRITE_WITHOUT_ENCLOSES METHOD
         return out
-
     '''
     def write_html_lists(self, tag):
         if tag.name in html_lists:
             if tag.name == "ul":  # unordered
                 for li in tag.findAll('li'):
                     if li.contents:
-                        self.write_unordered_list(readme_output, li.contents[0]) #README OUTPUT TO MODIFY BY MODYFING WRITE_UNORDERED_LIST METHOD
+                        out = self.write_unordered_list(li.contents[0]) #README OUTPUT TO MODIFY BY MODYFING WRITE_UNORDERED_LIST METHOD
 
         if tag.name == "ol":  # ordered
             index = 1
             for li in tag.findAll('li'):
                 if li.contents:
-                    self.write_ordered_list(readme_output, index, li.contents[0]) #README OUTPUT TO MODIFY BY MODYFING WRITE_ORDERED_LIST METHOD
+                    self.write_ordered_list(index, li.contents[0]) #README OUTPUT TO MODIFY BY MODYFING WRITE_ORDERED_LIST METHOD
                     index += 1
-
-    def write_html_links(self, tag, content):
-        return str( self.write_links(readme_output, tag.contents[0], str(tag.get('href'))) ) #README OUTPUT TO MODIFY BY MODYFING WRITE_LINKS METHOD
-
     '''
+    def write_html_links(self, tag, content):
+        out = self.write_links(tag, content) #  OUTPUT TO MODIFY BY MODYFING WRITE_LINKS METHOD
+        return out
 
     def convert(self, key_list, tag_name, **kwargs):
         converted = ""
         tag_content = kwargs.get('tag_content') # REMEMBER THAT TAG_CONTENT IS tag.contents NOT tag.contents[0]
         # print(key_list)
+        tag_href = kwargs.get('tag_href')
         tag_img = kwargs.get('tag_img')
         if key_list == html_empty:  # FOR HR AND BR
             converted = self.write_empty_tags(html_empty[tag_name])
@@ -112,9 +113,12 @@ class Converter():
 
         if key_list == html_headers:
             converted = self.write_without_encloses(html_headers[tag_name], tag_content[0])
-        #    converted = str(key_list[tag_name] + "\n")
 
         if key_list == html_with_closing_tag:
-            # converted = self.write_with_encloses(html_with_closing_tag[tag_name], tag_content[0])
             converted = self.write_html_with_closing_tag(html_with_closing_tag[tag_name], tag_content[0])
+
+        if key_list == html_links:
+            # write_links(readme_output, str(tag.get('href')), tag.contents[0])
+            converted = self.write_links(tag_href, tag_content[0])
+
         return converted

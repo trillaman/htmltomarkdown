@@ -29,14 +29,16 @@ def main():
     try:
         html_file = open("index.html", "r")  # input file
     except Exception as ex:
-        print("Error while opening source html for read")
+        print("Error while opening source html for read" + str(ex))
 
     try:
         readme_output = open("readme_output.md", "w")  # output - readme_output.md
     except Exception as ex:
-        print("Error while opening readme_output.md to write")
+        print("Error while opening readme_output.md to write" +str(ex))
+
     if html_file:
-      bsoup = BeautifulSoup(html_file, 'html.parser')  # parse input
+        bsoup = BeautifulSoup(html_file, 'html.parser')  # parse input
+
     conv = Converter()
 
     # could be prettier - bsoup.prettify()
@@ -51,6 +53,8 @@ def main():
             print("List: %s\n" % list_with_tag)
             if tag.name == "img":
                 converted_value = str(conv.convert(list_with_tag, tag.name, tag_content=tag.contents, tag_img=tag))
+            elif tag.name == "a":
+                converted_value = str(conv.convert(list_with_tag, tag.name, tag_content=tag.contents, tag_href=tag.get('href')))
             else:
                 converted_value = str(conv.convert(list_with_tag, tag.name, tag_content=tag.contents))
             readme_output.write(converted_value)
