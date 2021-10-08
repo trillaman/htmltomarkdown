@@ -37,10 +37,16 @@ class Converter():
     def write_new_line(self):
         return str("\n")
 
+    def trim_li_tags(self, string_to_trim): # MAKE THIS UNIVERSAL LIKE (self, tag_to_trim, string_to_trim)
+        content1 = str(string_to_trim)
+        content1 = content1.replace("<li>", "")  # remove opening bold tag to get pure tag content
+        content1 = content1.replace("</li>", "")
+
+        return content1
     # END OF STRING FORMATHING METHODS
 
     def check_if_tag_exists_in_list(self, tag_name):
-        if tag_name in html_headers or tag_name in html_empty or tag_name in html_without_closing_tag or tag_name in html_with_closing_tag or tag_name in html_links:
+        if tag_name in html_headers or tag_name in html_empty or tag_name in html_without_closing_tag or tag_name in html_with_closing_tag or tag_name in html_links or tag_name in html_lists:
             return 1
         else:
             return -1
@@ -56,6 +62,8 @@ class Converter():
             list = html_with_closing_tag
         elif tag in html_links:
             list = html_links
+        elif tag in html_lists:
+            list = html_lists
         if get_list_name == True:
             list = str(list)
         return list
@@ -79,21 +87,15 @@ class Converter():
                 out = self.write_image(tag['src'], tag['alt'])
             out = self.write_without_encloses(html_empty[tag], "")  # if tag is not image then write normal tag  - README OUTPUT TO MODIFY BY MODYFING WRITE_WITHOUT_ENCLOSES METHOD
         return out
-    '''
-    def write_html_lists(self, tag):
-        if tag.name in html_lists:
-            if tag.name == "ul":  # unordered
-                for li in tag.findAll('li'):
-                    if li.contents:
-                        out = self.write_unordered_list(li.contents[0]) #README OUTPUT TO MODIFY BY MODYFING WRITE_UNORDERED_LIST METHOD
+
+    def write_html_lists(self, tag, content, index):
+        if tag == "ul":  # unordered
+           out = self.write_unordered_list(content.contents[0]) #README OUTPUT TO MODIFY BY MODYFING WRITE_UNORDERED_LIST METHOD
 
         if tag.name == "ol":  # ordered
-            index = 1
-            for li in tag.findAll('li'):
-                if li.contents:
-                    self.write_ordered_list(index, li.contents[0]) #README OUTPUT TO MODIFY BY MODYFING WRITE_ORDERED_LIST METHOD
-                    index += 1
-    '''
+            out = self.write_ordered_list(index, content.contents[0]) #README OUTPUT TO MODIFY BY MODYFING WRITE_ORDERED_LIST METHOD
+            index += 1
+
     def write_html_links(self, tag, content):
         out = self.write_links(tag, content) #  OUTPUT TO MODIFY BY MODYFING WRITE_LINKS METHOD
         return out
@@ -104,6 +106,9 @@ class Converter():
         # print(key_list)
         tag_href = kwargs.get('tag_href')
         tag_img = kwargs.get('tag_img')
+        tag_index = kwargs.get('tag_index')
+        li_children = kwargs.get('list_children')
+
         if key_list == html_empty:  # FOR HR AND BR
             converted = self.write_empty_tags(html_empty[tag_name])
 
@@ -121,4 +126,11 @@ class Converter():
             # write_links(readme_output, str(tag.get('href')), tag.contents[0])
             converted = self.write_links(tag_href, tag_content[0])
 
+        if key_list == html_lists:
+            if tag_index:
+                li_index = 0
+                while (tag_index <= len(li_children)):
+                    converted += str(self.write_ordered_list(tag_index, self.trim_li_tags(li_children[li_index])))
+                    tag_index += 1
+                    li_index += 1
         return converted
