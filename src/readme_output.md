@@ -13,3 +13,5 @@ For now it can convert emphasis, headers, links, images and will be more (accord
 1. first element
 2. second element
 3. third element
+***
+![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Test image")

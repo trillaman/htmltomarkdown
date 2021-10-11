@@ -33,7 +33,7 @@ class Converter:
         return str(italic) + "_" + str(tag_content) + "_" + str(italic) + "\n"
 
     def write_image(self, image_href, alt_text):
-        return "![alt text]" + "(" + str(image_href) + " \"" + alt_text + "\")"
+        return "![alt text]" + "(" + str(image_href) + " " + "\"" + str(alt_text) + "\"" + ")"
 
     def write_new_line(self):
         return str("\n")
@@ -100,9 +100,8 @@ class Converter:
         if key_list == html_empty:  # FOR HR AND BR
             converted = self.write_empty_tags(html_empty[tag_name])
 
-        if key_list == html_without_closing_tag:  # FOR IMG
-            if tag_img:
-                converted = self.write_image(tag_img['src'], tag_img['alt'])  # BAD - SHOULD BE ONLY TAG , NOT TAG_NAME
+        if tag_img:
+            converted = self.write_image(tag_img['src'], tag_img['alt'])  # BAD - SHOULD BE ONLY TAG , NOT TAG_NAME
 
         if key_list == html_headers:
             converted = self.write_without_encloses(html_headers[tag_name], tag_content[0])
