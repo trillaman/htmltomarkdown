@@ -45,13 +45,16 @@ class Converter():
         return content1
     # END OF STRING FORMATHING METHODS
 
+    # BELOW COMMENTED OUT METHOD CAN BE REMOVED WHEN I'LL BE SURE ABOUT THAT
+    '''
     def check_if_tag_exists_in_list(self, tag_name):
         if tag_name in html_headers or tag_name in html_empty or tag_name in html_without_closing_tag or tag_name in html_with_closing_tag or tag_name in html_links or tag_name in html_lists:
             return 1
         else:
             return -1
-
+    '''
     def get_list_with_tag(self, tag, get_list_name):
+        list = ""
         if tag in html_headers:
             list = html_headers
         elif tag in html_empty:

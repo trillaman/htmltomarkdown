@@ -43,10 +43,11 @@ def main():
     # print(list(bsoup.children))
 
     for tag in list(bsoup.children):
-        check_if_exists = conv.check_if_tag_exists_in_list(tag.name)
-        if check_if_exists != -1:  # -1 means it doesn't exists in any list
+        #check_if_exists = conv.check_if_tag_exists_in_list(tag.name)
+        check_if_exists = str(conv.get_list_with_tag(tag.name, True))
+        if len(check_if_exists) != 0:  # -1 means it doesn't exists in any list
             list_with_tag = conv.get_list_with_tag(tag.name, 0)  # returns list containing tag
-            list_name_with_tag = conv.get_list_with_tag(tag.name, True)
+            list_name_with_tag = check_if_exists # same return, just to optimize
             print("Exists in %s\n" % list_name_with_tag)
             print("List: %s\n" % list_with_tag)
 
