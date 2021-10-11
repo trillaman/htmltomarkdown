@@ -1,5 +1,6 @@
 import unittest
-import converter
+from src import converter
+
 
 class TestConverter(unittest.TestCase):
     def test_headers(self):

@@ -35,7 +35,7 @@ def main():
     try:
         readme_output = open("readme_output.md", "w")  # output - readme_output.md
     except Exception as ex:
-        print("Error while opening readme_output.md to write" +str(ex))
+        print("Error while opening readme_output.md to write" + str(ex))
 
     conv = Converter()
 
@@ -43,11 +43,12 @@ def main():
     # print(list(bsoup.children))
 
     for tag in list(bsoup.children):
-        #check_if_exists = conv.check_if_tag_exists_in_list(tag.name)
+        # check_if_exists = conv.check_if_tag_exists_in_list(tag.name)
         check_if_exists = str(conv.get_list_with_tag(tag.name, True))
         if len(check_if_exists) != 0:  # -1 means it doesn't exists in any list
             list_with_tag = conv.get_list_with_tag(tag.name, 0)  # returns list containing tag
-            list_name_with_tag = check_if_exists # same return, just to optimize
+            list_name_with_tag = check_if_exists  # same return, just to optimize
+
             print("Exists in %s\n" % list_name_with_tag)
             print("List: %s\n" % list_with_tag)
 
@@ -60,18 +61,24 @@ def main():
                 index = 1
                 converted_value = str(conv.convert(list_with_tag, tag.name, tag_index=index, list_children=tag_child_list))
             elif tag.name == "ul":
-                tag_child_list = tag.findAll('li') # REPEAT TO REMOVE
+                tag_child_list = tag.findAll('li')  # REPEAT TO REMOVE
                 converted_value = str(conv.convert(list_with_tag, tag.name, tag_child_list=tag_child_list))
             else:
                 converted_value = str(conv.convert(list_with_tag, tag.name, tag_content=tag.contents))
             readme_output.write(converted_value)
         else:
             print("Not exists in any list\n")
-            converted_value = ""
             pass
 
-    html_file.close()  # close input file after use
-    readme_output.close()  # close output file after use
+    try:
+        html_file.close()  # close input file after use
+    except Exception as ex:
+        print("Can't close the file with input" + str(ex))
+
+    try:
+        readme_output.close()  # close output file after use
+    except Exception as ex:
+        print("Can't close output file" + str(ex))
 
 
 if __name__ == "__main__":
