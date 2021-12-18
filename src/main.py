@@ -23,17 +23,22 @@
 
 from bs4 import BeautifulSoup
 from converter import *
+import argparse
 
+parser = argparse.ArgumentParser()
+parser.add_argument("input", help="input file path (html)", type=str)
+parser.add_argument("output", help="output file path (for markdown)", type=str)
 
 def main():
+    args = parser.parse_args()
     try:
-        html_file = open("index.html", "r")  # input file
+        html_file = open(args.input, "r")  # input file
         bsoup = BeautifulSoup(html_file, 'html.parser')  # parse input
     except Exception as ex:
         print("Error while opening source html for read" + str(ex))
 
     try:
-        readme_output = open("readme_output.md", "w")  # output - readme_output.md
+        readme_output = open(args.output, "w")  # output - readme_output.md
     except Exception as ex:
         print("Error while opening readme_output.md to write" + str(ex))
 
@@ -62,7 +67,7 @@ def main():
                 converted_value = str(conv.convert(list_with_tag, tag.name, tag_index=index, list_children=tag_child_list))
             elif tag.name == "ul":
                 tag_child_list = tag.findAll('li')  # REPEAT TO REMOVE
-                converted_value = str(conv.convert(list_with_tag, tag.name, tag_child_list=tag_child_list))
+                converted_value = str(conv.convert(list_with_tag, tag.name, list_children=tag_child_list))
             else:
                 converted_value = str(conv.convert(list_with_tag, tag.name, tag_content=tag.contents))
             readme_output.write(converted_value)

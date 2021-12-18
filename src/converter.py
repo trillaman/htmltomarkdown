@@ -23,7 +23,7 @@ class Converter:
         return str(index) + ". " + str(tag_content) + "\n"
 
     def write_empty_tags(self, tag):  # FOR HTML_EMPTY
-        return str(tag) + "\n"
+        return str(tag) + 2*"\n"
 
     def write_links(self, tag_text, tag_href):
         return "[" + str(tag_href) + "]" + "(" + str(tag_text) + ")" + "\n"
@@ -63,6 +63,7 @@ class Converter:
         if get_list_name is True:
             list = str(list)
         return list
+
 
     def write_html_with_closing_tag(self, tag, content):  # THIS IS FOR ENCLOSED TAGS LIKE "<b>content</b>"
         if len(content) > 0:
@@ -119,5 +120,10 @@ class Converter:
                 while (tag_index <= len(li_children)):
                     converted += str(self.write_ordered_list(tag_index, self.trim_li_tags(li_children[li_index])))
                     tag_index += 1
+                    li_index += 1
+            else:
+                li_index = 0
+                while (li_index < len(li_children)):
+                    converted += str(self.write_unordered_list((self.trim_li_tags(li_children[li_index]))))
                     li_index += 1
         return converted
