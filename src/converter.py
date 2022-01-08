@@ -1,5 +1,5 @@
 html_headers = {"h1": "# ", "h2": "## ", "h3": "### ", "h4": "#### ", "h5": "##### ", "h6": "###### "}  # write_without_encloses
-html_empty = {"hr": "***", "br": ""}  # write_empty_tags
+html_empty = {"hr": "***", "br": " "}  # write_empty_tags
 html_without_closing_tag = {"img": ""}
 html_with_closing_tag = {"p": "", "i": "*", "b": "__", "s": "~~"}
 html_lists = {"ul": 0, "ol": 1}
@@ -23,7 +23,10 @@ class Converter:
         return str(index) + ". " + str(tag_content) + "\n"
 
     def write_empty_tags(self, tag):  # FOR HTML_EMPTY
-        return str(tag) + 2*"\n"
+        if tag == "br":
+            return "\n"
+        else:
+            return str(tag) + 2 *"\n"
 
     def write_links(self, tag_text, tag_href):
         return "[" + str(tag_href) + "]" + "(" + str(tag_text) + ")" + "\n"
@@ -78,7 +81,7 @@ class Converter:
 
     def write_html_empty(self, tag, content):
         if len(content) > 0:
-            out = self.write_without_encloses(html_empty[tag.name], content)  # README OUTPUT TO MODIFY BY MODYFING WRITE_WITHOUT_ENCLOSES METHOD
+            out = self.write_without_encloses(html_empty[tag.name], content) # README OUTPUT TO MODIFY BY MODYFING WRITE_WITHOUT_ENCLOSES METHOD
         else:  # for empty content - so without text between > and <
             if tag == "img":  # check for images
                 out = self.write_image(tag['src'], tag['alt'])
