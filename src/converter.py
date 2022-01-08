@@ -81,7 +81,7 @@ class Converter:
 
     def write_html_empty(self, tag, content):
         if len(content) > 0:
-            out = self.write_without_encloses(html_empty[tag.name], content) # README OUTPUT TO MODIFY BY MODYFING WRITE_WITHOUT_ENCLOSES METHOD
+            out = self.write_without_encloses(html_empty[tag.name], content)  # README OUTPUT TO MODIFY BY MODYFING WRITE_WITHOUT_ENCLOSES METHOD
         else:  # for empty content - so without text between > and <
             if tag == "img":  # check for images
                 out = self.write_image(tag['src'], tag['alt'])

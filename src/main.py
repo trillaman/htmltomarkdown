@@ -68,8 +68,6 @@ def main():
             elif tag.name == "ul":
                 tag_child_list = tag.findAll('li')  # REPEAT TO REMOVE
                 converted_value = str(conv.convert(list_with_tag, tag.name, list_children=tag_child_list))
-            elif tag.name == "br":
-                converted_value = str(conv.convert(list_with_tag, tag.name))
             else:
                 converted_value = str(conv.convert(list_with_tag, tag.name, tag_content=tag.contents))
             readme_output.write(converted_value)
