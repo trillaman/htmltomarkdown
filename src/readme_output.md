@@ -1,17 +1,13 @@
-# What it is
-htmltomarkdown is script written to convert html pages to markdown in purpose of creating readmes and other
-***
-# What it use
-From external libraries it's using only BeautifulSoup4
-[BeautifulSoup4 on pypi](https://pypi.org/project/beautifulsoup4/)
-***
-# What it can
-For now it can convert emphasis, headers, links, images and will be more (according to markdown cheatsheet here: https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
-***
-### Yes... This readme was generated using this project
-***
-1. first element
+1. *first element*
 2. second element
 3. third element
+
 ***
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Test image")
+
+* *__~~one~~__*
+* two
+* third
+
+
+
+Test klsjgklsgjkgjg __testt__

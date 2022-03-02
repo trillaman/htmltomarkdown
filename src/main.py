@@ -1,4 +1,4 @@
-# Headers - done
+# Headers - to rewrite
 # Horizontal Rule - done (changed)
 # Lists - done
 # Emphasis - done
@@ -40,40 +40,31 @@ def main():
     try:
         readme_output = open(args.output, "w")  # output - readme_output.md
     except Exception as ex:
-        print("Error while opening readme_output.md to write" + str(ex))
+        print("Error while opening %s to write" + str(ex) % str(args.output))
 
-    conv = Converter()
-
-    # could be prettier - bsoup.prettify()
-    # print(list(bsoup.children))
+    conv = Converter()  # this class is responsible for all operations between html and markdown
 
     for tag in list(bsoup.children):
-        # check_if_exists = conv.check_if_tag_exists_in_list(tag.name)
-        check_if_exists = str(conv.get_list_with_tag(tag.name, True))
-        if len(check_if_exists) != 0:  # -1 means it doesn't exists in any list
-            list_with_tag = conv.get_list_with_tag(tag.name, 0)  # returns list containing tag
-            list_name_with_tag = check_if_exists  # same return, just to optimize
 
-            print("Exists in %s\n" % list_name_with_tag)
-            print("List: %s\n" % list_with_tag)
-
-            if tag.name == "img":
-                converted_value = str(conv.convert(list_with_tag, tag.name, tag_content=tag.contents, tag_img=tag))
-            elif tag.name == "a":
-                converted_value = str(conv.convert(list_with_tag, tag.name, tag_content=tag.contents, tag_href=tag.get('href')))
-            elif tag.name == "ol":
-                tag_child_list = tag.findAll('li')
-                index = 1
-                converted_value = str(conv.convert(list_with_tag, tag.name, tag_index=index, list_children=tag_child_list))
-            elif tag.name == "ul":
-                tag_child_list = tag.findAll('li')  # REPEAT TO REMOVE
-                converted_value = str(conv.convert(list_with_tag, tag.name, list_children=tag_child_list))
-            else:
-                converted_value = str(conv.convert(list_with_tag, tag.name, tag_content=tag.contents))
-            readme_output.write(converted_value)
+        if tag.name == "ol":  # if ordered
+            tag_child_list = tag.findAll('li')  # we need to find all li's inside
+            i = 1
+            for x in tag_child_list:  # for every li
+                parsed_child = conv.check_children(conv.trim_li_tags(str(x)))  # we have to trim "li" tags and replace all inside tags with proper markdown tags
+                readme_output.write(conv.pat_ordered_li(i, parsed_child) + "\n")  # we are writing number of list element with parsed value
+                i += 1
+        elif tag.name == "ul":
+            tag_child_list = tag.findAll('li')  # for every li
+            for x in tag_child_list:
+                parsed_child = conv.check_children(conv.trim_li_tags(str(x))) # we have to trim "li" tags and replace all inside tags with proper markdown tags
+                readme_output.write(conv.pat_unordered_li(parsed_child))  # and here we are writing parsed value
         else:
-            print("Not exists in any list\n")
-            pass
+            if len(tag.get_text()) > 0:
+                parsed_child = conv.check_children(str(tag))
+                readme_output.write(conv.pat_text(parsed_child))
+            else:
+                parsed_output = conv.convert(tag)
+                readme_output.write(parsed_output)
 
     try:
         html_file.close()  # close input file after use
