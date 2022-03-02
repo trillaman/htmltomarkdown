@@ -2,6 +2,7 @@ html_headers = {"h1": "# ", "h2": "## ", "h3": "### ", "h4": "#### ", "h5": "###
                 "h6": "###### "}  # write_without_encloses
 html_empty = {"hr": "***\n", "br": "\n"}  # write_empty_tags
 text_modifiers = {"i": "*", "b": "__", "s": "~~"}
+text_tags = {"p": ""}
 
 class Converter:
     #THOSE NEEDED
@@ -41,32 +42,17 @@ class Converter:
         for i in range(0, len(html_headers)):
             content1 = content1.replace("<" + list(html_headers)[i] + ">", "")
             content1 = content1.replace("</" + list(html_headers)[i] + ">", "")
+
         return content1
 
-
-
-
-    def write_links(self, tag_text, tag_href):
-        return "[" + str(tag_href) + "]" + "(" + str(tag_text) + ")" + "\n"
+    def pat_links(self, tag_text, tag_href):
+        return "[" + str(tag_text) + "]" + "(" + str(tag_href) + ")" + "\n"
 
     def write_image(self, image_href, alt_text):
         return "![" + str(alt_text) + "]" + "(" + str(image_href) + ")"
 
     def write_new_line(self):
         return str("\n")
-
-
-
-    def write_html_empty(self, tag, content):
-        if len(content) > 0:
-            out = self.write_without_encloses(html_empty[tag.name],
-                                              content)  # README OUTPUT TO MODIFY BY MODYFING WRITE_WITHOUT_ENCLOSES METHOD
-        else:  # for empty content - so without text between > and <
-            if tag == "img":  # check for images
-                out = self.write_image(tag['src'], tag['alt'])
-            out = self.write_without_encloses(html_empty[tag],
-                                              "")  # if tag is not image then write normal tag  - README OUTPUT TO MODIFY BY MODYFING WRITE_WITHOUT_ENCLOSES METHOD
-        return out
 
     def write_html_links(self, tag, content):
         out = self.write_links(tag, content)  # OUTPUT TO MODIFY BY MODYFING WRITE_LINKS METHOD
@@ -75,8 +61,6 @@ class Converter:
     def convert(self, tag, **kwargs):
         converted = ""
 
-        if tag.name in html_empty:  # FOR HR AND BR
-            converted = html_empty[tag.name]
 
         if tag.name == "ol":  # if ordered
             tag_child_list = tag.findAll('li')  # we need to find all li's inside
@@ -95,22 +79,14 @@ class Converter:
         elif tag.name == "img":
             converted = self.write_image(tag['src'], tag['alt'])  # BAD - SHOULD BE ONLY TAG , NOT TAG_NAME
 
+        elif tag.name == "a":
+            converted = self.pat_links(tag.get_text(), tag['href'])
+
         else:
-            if len(tag.get_text()) > 0:
-                if tag.name in html_headers:
-                    parsed_child = self.check_children(str(tag))
-                    converted = str(html_headers[tag.name]) + self.trim_tags(parsed_child) + "\n"
+            if len(tag.get_text()) > 0 and tag.name in html_headers:
+                parsed_child = self.check_children(str(tag))
+                converted = str(html_headers[tag.name]) + self.trim_tags(parsed_child) + "\n"
+            elif len(tag.get_text()) == 0 and tag.name in html_empty:
+                converted = html_empty[tag.name]
 
-
-        '''
-        if key_list == html_headers:
-            converted = self.write_without_encloses(html_headers[tag_name], tag_content[0])
-
-        if key_list == html_with_closing_tag:
-            converted = self.write_html_with_closing_tag(html_with_closing_tag[tag_name], tag_content[0])
-
-        if tag.:
-            # write_links(readme_output, str(tag.get('href')), tag.contents[0])
-            converted = self.write_links(tag_href, tag_content[0])
-        '''
         return converted
