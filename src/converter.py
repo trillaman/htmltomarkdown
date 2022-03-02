@@ -36,7 +36,12 @@ class Converter:
             content1 = content1.replace("</s>", "~~")
         return content1
 
-
+    def trim_tags(self, content):
+        content1 = str(content)
+        for i in range(0, len(html_headers)):
+            content1 = content1.replace("<" + list(html_headers)[i] + ">", "")
+            content1 = content1.replace("</" + list(html_headers)[i] + ">", "")
+        return content1
 
 
 
@@ -45,7 +50,7 @@ class Converter:
         return "[" + str(tag_href) + "]" + "(" + str(tag_text) + ")" + "\n"
 
     def write_image(self, image_href, alt_text):
-        return "![alt text]" + "(" + str(image_href) + " " + "\"" + str(alt_text) + "\"" + ")"
+        return "![" + str(alt_text) + "]" + "(" + str(image_href) + ")"
 
     def write_new_line(self):
         return str("\n")
@@ -80,22 +85,24 @@ class Converter:
                 parsed_child = self.check_children(self.trim_li_tags(str(x)))  # we have to trim "li" tags and replace all inside tags with proper markdown tags
                 converted += self.pat_ordered_li(i, parsed_child) + "\n"  # we are writing number of list element with parsed value
                 i += 1
+
         elif tag.name == "ul":
             tag_child_list = tag.findAll('li')  # for every li
             for x in tag_child_list:
                 parsed_child = self.check_children(self.trim_li_tags(str(x))) # we have to trim "li" tags and replace all inside tags with proper markdown tags
                 converted += self.pat_unordered_li(parsed_child)  # and here we are writing parsed value
+
+        elif tag.name == "img":
+            converted = self.write_image(tag['src'], tag['alt'])  # BAD - SHOULD BE ONLY TAG , NOT TAG_NAME
+
         else:
             if len(tag.get_text()) > 0:
-                parsed_child = self.check_children(str(tag))
-                converted += self.pat_text(parsed_child)
-            #else:
-                #parsed_output = self.convert(tag)
-            #    converted = parsed_output
-        '''
-        if tag_img:
-            converted = self.write_image(tag_img['src'], tag_img['alt'])  # BAD - SHOULD BE ONLY TAG , NOT TAG_NAME
+                if tag.name in html_headers:
+                    parsed_child = self.check_children(str(tag))
+                    converted = str(html_headers[tag.name]) + self.trim_tags(parsed_child) + "\n"
 
+
+        '''
         if key_list == html_headers:
             converted = self.write_without_encloses(html_headers[tag_name], tag_content[0])
 

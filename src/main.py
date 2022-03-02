@@ -1,4 +1,4 @@
-# Headers - to rewrite
+# Headers - done
 # Horizontal Rule - done (changed)
 # Lists - done
 # Emphasis - done
