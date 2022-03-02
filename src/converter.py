@@ -67,16 +67,31 @@ class Converter:
         out = self.write_links(tag, content)  # OUTPUT TO MODIFY BY MODYFING WRITE_LINKS METHOD
         return out
 
-
-
     def convert(self, tag, **kwargs):
         converted = ""
 
         if tag.name in html_empty:  # FOR HR AND BR
             converted = html_empty[tag.name]
 
-        if tag.name == "p":
-            converted = self.check_children(str(tag.contents))
+        if tag.name == "ol":  # if ordered
+            tag_child_list = tag.findAll('li')  # we need to find all li's inside
+            i = 1
+            for x in tag_child_list:  # for every li
+                parsed_child = self.check_children(self.trim_li_tags(str(x)))  # we have to trim "li" tags and replace all inside tags with proper markdown tags
+                converted += self.pat_ordered_li(i, parsed_child) + "\n"  # we are writing number of list element with parsed value
+                i += 1
+        elif tag.name == "ul":
+            tag_child_list = tag.findAll('li')  # for every li
+            for x in tag_child_list:
+                parsed_child = self.check_children(self.trim_li_tags(str(x))) # we have to trim "li" tags and replace all inside tags with proper markdown tags
+                converted += self.pat_unordered_li(parsed_child)  # and here we are writing parsed value
+        else:
+            if len(tag.get_text()) > 0:
+                parsed_child = self.check_children(str(tag))
+                converted += self.pat_text(parsed_child)
+            #else:
+                #parsed_output = self.convert(tag)
+            #    converted = parsed_output
         '''
         if tag_img:
             converted = self.write_image(tag_img['src'], tag_img['alt'])  # BAD - SHOULD BE ONLY TAG , NOT TAG_NAME

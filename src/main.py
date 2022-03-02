@@ -45,26 +45,7 @@ def main():
     conv = Converter()  # this class is responsible for all operations between html and markdown
 
     for tag in list(bsoup.children):
-
-        if tag.name == "ol":  # if ordered
-            tag_child_list = tag.findAll('li')  # we need to find all li's inside
-            i = 1
-            for x in tag_child_list:  # for every li
-                parsed_child = conv.check_children(conv.trim_li_tags(str(x)))  # we have to trim "li" tags and replace all inside tags with proper markdown tags
-                readme_output.write(conv.pat_ordered_li(i, parsed_child) + "\n")  # we are writing number of list element with parsed value
-                i += 1
-        elif tag.name == "ul":
-            tag_child_list = tag.findAll('li')  # for every li
-            for x in tag_child_list:
-                parsed_child = conv.check_children(conv.trim_li_tags(str(x))) # we have to trim "li" tags and replace all inside tags with proper markdown tags
-                readme_output.write(conv.pat_unordered_li(parsed_child))  # and here we are writing parsed value
-        else:
-            if len(tag.get_text()) > 0:
-                parsed_child = conv.check_children(str(tag))
-                readme_output.write(conv.pat_text(parsed_child))
-            else:
-                parsed_output = conv.convert(tag)
-                readme_output.write(parsed_output)
+        readme_output.write(conv.convert(tag))
 
     try:
         html_file.close()  # close input file after use
