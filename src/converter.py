@@ -58,6 +58,39 @@ class Converter:
         out = self.write_links(tag, content)  # OUTPUT TO MODIFY BY MODYFING WRITE_LINKS METHOD
         return out
 
+    def write_table_headers(self, tablehead):
+        output = "\n"
+        for x in range(0, len(tablehead)):
+            if x == 0:
+                first_header = tablehead[0].get_text()
+                output += "| " + first_header + " | "
+            else:
+                header = tablehead[x].get_text()
+                output += header + " | "
+
+        output += "\n"
+
+        for a in range(0, len(tablehead)):
+            if a == 0:
+                output += "| " + len(tablehead[a].get_text()) * "-" + " | "
+            else:
+                output += len(tablehead[a].get_text()) * "-" + " | "
+        output += "\n"
+
+        return output
+
+    def write_table_data(self, tabledata):
+        output = ""
+        for x in range(0, len(tabledata)):
+            if x == 0:
+                first_data = tabledata[0].get_text()
+                output += "| " + first_data + " | "
+            else:
+                first_data = tabledata[x].get_text()
+                output += first_data + " | "
+
+        return output
+
     def convert(self, tag, **kwargs):
         converted = ""
 
@@ -81,6 +114,13 @@ class Converter:
 
         elif tag.name == "a":
             converted = self.pat_links(tag.get_text(), tag['href'])
+
+        elif tag.name == "table":
+            tag_child_headers = tag.findAll('th')
+            tag_child_datarows = tag.findAll('td')
+
+            converted = self.write_table_headers(tag_child_headers)
+            converted += self.write_table_data(tag_child_datarows)
 
         else:
             if len(tag.get_text()) > 0 and tag.name in html_headers:
