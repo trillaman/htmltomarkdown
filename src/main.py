@@ -3,12 +3,10 @@
 # Lists - done
 # Emphasis - done
 # Links - done
-
-# ![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
 # Images - done
+# Tables - done
 
 # Code and Syntax Highlighting - to do
-# Tables - done
 # Blockquotes - to do
 # Inline HTML - to do
 # Line Breaks - to do
@@ -16,7 +14,6 @@
 
 # TODO PYTHON SIDE:
 # parameters as in/out file
-# checking if files exists
 # exceptions handling
 # refactoring for cleaner code
 # unit tests

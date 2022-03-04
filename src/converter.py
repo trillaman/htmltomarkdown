@@ -54,26 +54,26 @@ class Converter:
 
     def write_table_headers(self, tablehead):
         output = "\n"
-        for x in range(0, len(tablehead)):
-            if x == 0:
-                first_header = tablehead[0].get_text()
-                output += "| " + first_header + " | "
+        for x in range(0, len(tablehead)):  # count headers and in this range separate text from headers with delimiter
+            if x == 0:  # if this is first header
+                first_header = tablehead[0].get_text()  # get value
+                output += "| " + first_header + " | "  # and put this with starting and ending delimiter
             else:
-                header = tablehead[x].get_text()
-                output += header + " | "
+                header = tablehead[x].get_text()  # if those are next headers
+                output += header + " | "  # put just text with ending delimiter that could be also ending one foe header row
 
         output += "\n"
 
-        for a in range(0, len(tablehead)):
+        for a in range(0, len(tablehead)):  # there is also need for separating row between headers and data
             if a == 0:
-                output += "| " + len(tablehead[a].get_text()) * "-" + " | "
+                output += "| " + len(tablehead[a].get_text()) * "-" + " | "  # get length of text in header and make dashes that are equal in length
             else:
-                output += len(tablehead[a].get_text()) * "-" + " | "
+                output += len(tablehead[a].get_text()) * "-" + " | "  # the same way as in generating headers
         output += "\n"
 
         return output
 
-    def write_table_data(self, tabledata, num_of_headers):
+    def write_table_data(self, tabledata, num_of_headers):  # for explanation of this code look at header generating
         output = ""
         for x in range(0, len(tabledata)):
             if x == 0:
