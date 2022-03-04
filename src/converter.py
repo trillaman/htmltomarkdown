@@ -79,15 +79,18 @@ class Converter:
 
         return output
 
-    def write_table_data(self, tabledata):
+    def write_table_data(self, tabledata, num_of_headers):
         output = ""
         for x in range(0, len(tabledata)):
             if x == 0:
                 first_data = tabledata[0].get_text()
                 output += "| " + first_data + " | "
             else:
+                if x % num_of_headers == 0:
+                    output += "\n| "
                 first_data = tabledata[x].get_text()
                 output += first_data + " | "
+        output += "\n"
 
         return output
 
@@ -118,9 +121,9 @@ class Converter:
         elif tag.name == "table":
             tag_child_headers = tag.findAll('th')
             tag_child_datarows = tag.findAll('td')
-
+            numb_of_headers = len(tag_child_headers)
             converted = self.write_table_headers(tag_child_headers)
-            converted += self.write_table_data(tag_child_datarows)
+            converted += self.write_table_data(tag_child_datarows, numb_of_headers)
 
         else:
             if len(tag.get_text()) > 0 and tag.name in html_headers:
