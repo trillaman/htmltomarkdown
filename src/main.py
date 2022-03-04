@@ -8,7 +8,7 @@
 # Images - done
 
 # Code and Syntax Highlighting - to do
-# Tables - to do
+# Tables - done
 # Blockquotes - to do
 # Inline HTML - to do
 # Line Breaks - to do

@@ -4,8 +4,9 @@ html_empty = {"hr": "***\n", "br": "\n"}  # write_empty_tags
 text_modifiers = {"i": "*", "b": "__", "s": "~~"}
 text_tags = {"p": ""}
 
+
 class Converter:
-    #THOSE NEEDED
+    # THOSE NEEDED
     def pat_unordered_li(self, tag_content):
         return "* " + str(tag_content) + "\n"
 
@@ -51,13 +52,6 @@ class Converter:
     def write_image(self, image_href, alt_text):
         return "![" + str(alt_text) + "]" + "(" + str(image_href) + ")"
 
-    def write_new_line(self):
-        return str("\n")
-
-    def write_html_links(self, tag, content):
-        out = self.write_links(tag, content)  # OUTPUT TO MODIFY BY MODYFING WRITE_LINKS METHOD
-        return out
-
     def write_table_headers(self, tablehead):
         output = "\n"
         for x in range(0, len(tablehead)):
@@ -97,19 +91,21 @@ class Converter:
     def convert(self, tag, **kwargs):
         converted = ""
 
-
         if tag.name == "ol":  # if ordered
             tag_child_list = tag.findAll('li')  # we need to find all li's inside
             i = 1
             for x in tag_child_list:  # for every li
-                parsed_child = self.check_children(self.trim_li_tags(str(x)))  # we have to trim "li" tags and replace all inside tags with proper markdown tags
-                converted += self.pat_ordered_li(i, parsed_child) + "\n"  # we are writing number of list element with parsed value
+                parsed_child = self.check_children(self.trim_li_tags(
+                    str(x)))  # we have to trim "li" tags and replace all inside tags with proper markdown tags
+                converted += self.pat_ordered_li(i,
+                                                 parsed_child) + "\n"  # we are writing number of list element with parsed value
                 i += 1
 
         elif tag.name == "ul":
             tag_child_list = tag.findAll('li')  # for every li
             for x in tag_child_list:
-                parsed_child = self.check_children(self.trim_li_tags(str(x))) # we have to trim "li" tags and replace all inside tags with proper markdown tags
+                parsed_child = self.check_children(self.trim_li_tags(
+                    str(x)))  # we have to trim "li" tags and replace all inside tags with proper markdown tags
                 converted += self.pat_unordered_li(parsed_child)  # and here we are writing parsed value
 
         elif tag.name == "img":
